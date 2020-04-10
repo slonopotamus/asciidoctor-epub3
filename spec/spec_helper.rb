@@ -5,12 +5,21 @@ require 'asciidoctor-epub3'
 Zip.force_entry_names_encoding = 'UTF-8'
 
 RSpec.configure do |config|
+  @old_logger = nil
+
   config.before do
+    FileUtils.rm_r temp_dir, force: true, secure: true
+    @old_logger = Asciidoctor::LoggerManager.logger
+    Asciidoctor::LoggerManager.logger = Asciidoctor::MemoryLogger.new
+  end
+
+  config.after do
+    Asciidoctor::LoggerManager.logger = @old_logger
     FileUtils.rm_r temp_dir, force: true, secure: true
   end
 
   config.after do
-    FileUtils.rm_r temp_dir, force: true, secure: true
+    expect(Asciidoctor::LoggerManager.logger.max_severity).not_to be > Logger::Severity::INFO, Asciidoctor::LoggerManager.logger.messages.join('\n')
   end
 
   def bin_script name, opts = {}

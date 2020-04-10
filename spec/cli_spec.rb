@@ -61,7 +61,8 @@ describe 'asciidoctor-epub3' do
 
   it 'prints errors to stderr when converts invalid book to mobi' do
     _, err, res = to_mobi fixture_file('invalid.adoc'), temp_file('invalid.mobi')
-    expect(err).to include 'ERROR'
+    # Warning from KindleGen
+    expect(err).to include 'W14002'
     expect(res.exitstatus).to eq(0)
   end
 

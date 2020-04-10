@@ -1600,11 +1600,7 @@ body > svg {
         end
 
         output_file = ::File.join ::File.dirname(epub_file), mobi_file
-        if res.success?
-          logger.debug %(Wrote MOBI to #{output_file})
-        else
-          logger.error %(KindleGen failed to write MOBI to #{output_file})
-        end
+        logger.debug %(Wrote MOBI to #{output_file}) if res.success?
       end
 
       def get_epubcheck_command epubcheck_path
